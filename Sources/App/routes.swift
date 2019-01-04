@@ -3,7 +3,9 @@ import Vapor
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
     
-    
+    router.get("hello", "vapor") { req -> String in
+        return "Hello Vapor!"
+    }
     // 1
     router.get("api", "user") { req -> Future<[SeverModel]> in
         // 2
@@ -14,7 +16,7 @@ public func routes(_ router: Router) throws {
     // 1
     router.put("api", "user", SeverModel.parameter) {
         req -> Future<SeverModel> in
-        // 2
+        // 2r
         return try flatMap(to: SeverModel.self,
                            req.parameters.next(SeverModel.self),
                            req.content.decode(SeverModel.self)) {
