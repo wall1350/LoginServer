@@ -5,7 +5,7 @@
 //  Created by 徐兆陽 on 2018/12/29.
 //
 import Vapor
-import FluentMySQL
+//import FluentMySQL
 import FluentPostgreSQL
 final class SeverModel: Codable {
     var id: Int?
