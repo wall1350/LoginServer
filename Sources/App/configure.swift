@@ -18,7 +18,7 @@ public func configure(
     var databases = DatabasesConfig()
     // 2
     
-    let databaseConfig: PostgreSQLDatabaseConfig
+    var databaseConfig: PostgreSQLDatabaseConfig
     if let url = Environment.get("DATABASE_URL") {
         databaseConfig = PostgreSQLDatabaseConfig(url: url)!
     }
@@ -28,7 +28,7 @@ public func configure(
         let databaseName = Environment.get("DATABASE_DB") ?? "vapor"
         let password = Environment.get("DATABASE_PASSWORD") ?? "password"
     // 3
-    let databaseConfig = PostgreSQLDatabaseConfig(
+     databaseConfig = PostgreSQLDatabaseConfig(
         hostname: hostname,
         username: username,
         database: databaseName,
