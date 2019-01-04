@@ -14,18 +14,28 @@ public func configure(
     middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
     // Configure a database
+    // 1
     var databases = DatabasesConfig()
+    // 2
+    
+    let databaseConfig: PostgreSQLDatabaseConfig
+    if let url = Environment.get("DATABASE_URL") {
+        databaseConfig = PostgreSQLDatabaseConfig(url: url)!
+    }
+    else {
+        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+        let username = Environment.get("DATABASE_USER") ?? "vapor"
+        let databaseName = Environment.get("DATABASE_DB") ?? "vapor"
+        let password = Environment.get("DATABASE_PASSWORD") ?? "password"
     // 3
     let databaseConfig = PostgreSQLDatabaseConfig(
-        hostname: "localhost",
-        username: "vapor",
-        database: "vapor",
-        password: "password")
-    let database = PostgreSQLDatabase(config: databaseConfig)
-    databases.add(database: database, as: .psql)
-    services.register(databases)
-    var migrations = MigrationConfig()
+        hostname: hostname,
+        username: username,
+        database: databaseName,
+        password: password)
+    }
     // 4
+    var migrations = MigrationConfig()
     migrations.add(model: SeverModel.self, database:.psql)
     services.register(migrations)
 }
