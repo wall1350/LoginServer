@@ -18,24 +18,29 @@ public func configure(
     var databases = DatabasesConfig()
     // 2
     
-    var databaseConfig: PostgreSQLDatabaseConfig
+    let databaseConfig: PostgreSQLDatabaseConfig
     if let url = Environment.get("DATABASE_URL") {
         databaseConfig = PostgreSQLDatabaseConfig(url: url)!
     }
     else {
-        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+        let hostname = Environment.get("DATABASE_HOSTNAME")
+            ?? "localhost"
         let username = Environment.get("DATABASE_USER") ?? "vapor"
         let databaseName = Environment.get("DATABASE_DB") ?? "vapor"
-        let password = Environment.get("DATABASE_PASSWORD") ?? "password"
-    // 3
-     databaseConfig = PostgreSQLDatabaseConfig(
-        hostname: hostname,
-        username: username,
-        database: databaseName,
-        password: password)
+        let password = Environment.get("DATABASE_PASSWORD")
+            ?? "password"
+        // 3
+         databaseConfig = PostgreSQLDatabaseConfig(
+            hostname: hostname,
+            username: username,
+            database: databaseName,
+            password: password)
     }
     // 4
-    var migrations = MigrationConfig()
-    migrations.add(model: SeverModel.self, database:.psql)
-    services.register(migrations)
+    
+    let database = PostgreSQLDatabase(config: databaseConfig)
+    // 5
+    databases.add(database: database, as: .psql)
+    // 6
+    services.register(databases)
 }
